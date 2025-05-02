@@ -120,6 +120,8 @@ Both metrics are reported as percentages, with higher values indicating better p
 
 - Pre-training objectives significantly impact downstream task performance, with models trained without NSP generally performing better on question answering tasks.
 
+- Error analysis revealed distinct patterns in how models fail: RoBERTa tends toward over-inclusion, DistilBERT is most susceptible to adversarial distractors, and ALBERT struggles primarily with article/punctuation precision. See the detailed error_analysis markdown for examples and patterns.
+
 ## Project Structure
 
 The repository is organized as follows:
@@ -152,6 +154,10 @@ The repository is organized as follows:
 
 - **bow_benchmark.py**: Simple baseline implementation using TF-IDF and cosine similarity
   - Provides benchmark metrics for comparison with transformer models
+
+- **error_analysis.md**: Comprehensive documentation of model errors
+  - Contains specific error examples for each model on all datasets
+  - Analyzes common error patterns and model-specific weaknesses
 
 - **inference.py**: Script for using trained models to answer questions
   - Enables easy use of the trained models for inference tasks
