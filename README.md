@@ -227,7 +227,7 @@ pip install -r requirements.txt
 
 ## Conclusion
 
-Our comprehensive evaluation demonstrates that transformer-based models achieve impressive performance on question answering tasks, with ALBERT showing particularly strong results across all test conditions. While all models exhibit vulnerability to adversarial examples, the relative performance maintained by ALBERT suggests promising directions for improving model robustness.
+My comprehensive evaluation demonstrates that transformer-based models achieve impressive performance on question answering tasks, with ALBERT showing particularly strong results across all test conditions. While all models exhibit vulnerability to adversarial examples, the relative performance maintained by ALBERT suggests promising directions for improving model robustness.
 
 The trade-offs between model size and performance are evident, with lighter models like DistilBERT offering reasonable performance with significantly reduced computational requirements. This suggests that for many practical applications, smaller models may provide an optimal balance of accuracy and efficiency.
 
