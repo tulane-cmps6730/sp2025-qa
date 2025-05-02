@@ -1,7 +1,7 @@
 # Question Answering with Transformer Models
 
 ## Project Overview
-This project explores the effectiveness of various transformer-based models for question answering on the SQuAD dataset. We fine-tuned multiple pre-trained models, evaluated their performance, and analyzed their behavior under standard and adversarial conditions.
+This project explores the effectiveness of various transformer-based models for question answering on the SQuAD dataset. I fine-tuned multiple pre-trained models, evaluated their performance, and analyzed their behavior under standard and adversarial conditions.
 
 ## Goals
 - Evaluate the performance of different transformer architectures on question answering tasks
@@ -43,7 +43,7 @@ Performance metrics across different evaluation settings (EM/F1 scores):
 
 ## Benchmark Model Performance
 
-In addition to transformer models, we implemented a simple Bag of Words (BoW) benchmark to establish a baseline for comparison:
+In addition to transformer models, I implemented a simple Bag of Words (BoW) benchmark to establish a baseline for comparison:
 
 ### Bag of Words Benchmark
 
@@ -78,7 +78,7 @@ The training samples typically included ~130,000 training examples and ~12,000 v
 
 ## Evaluation Metrics
 
-We evaluated our models using two primary metrics:
+I evaluated our models using two primary metrics:
 
 - **Exact Match (EM)**: The percentage of predictions that exactly match any of the ground truth answers. This is a strict binary measure where a prediction is either correct or incorrect.
 
