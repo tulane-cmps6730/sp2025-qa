@@ -37,8 +37,19 @@ Performance metrics across different evaluation settings (EM/F1 scores):
 | RoBERTa | 71.16 / 82.93 | 75.67 / 81.58 | 50.90 / 59.74 | 59.15 / 69.31 |
 | BERT | 70.58 / 77.71 | 71.72 / 75.53 | 50.65 / 56.22 | 57.97 / 64.02 |
 
+## Training Progress
+
+All models were trained exclusively on the SQuAD 2.0 dataset and then evaluated on SQuAD 1.1, SQuAD 2.0, and the adversarial datasets (AddSent and AddOneSent). This approach tests the models' generalization capabilities across different question answering scenarios.
+
+Below are the training progress plots for each model:
+
+### BERT Training Progress
 ![BERT Training Progress - 84,000 steps with Adam optimizer](FurtherTrainingPlots/BERT_training_progress.png)
+
+### ALBERT Training Progress
 ![ALBERT Training Progress - 37,500 steps with consistent improvements in loss metrics](FurtherTrainingPlots/albert_training_progress.png)
+
+### DistilBERT Training Progress
 ![DistilBERT Training Progress - 69,000 steps showing steady convergence](FurtherTrainingPlots/DistilbertTraining.png)
 
 ## Benchmark Model Performance
@@ -139,6 +150,12 @@ The repository is organized as follows:
     ```
   - Simply change "AddSent" to "AddOneSent" to evaluate on the alternative adversarial dataset
 
+- **bow_benchmark.py**: Simple baseline implementation using TF-IDF and cosine similarity
+  - Provides benchmark metrics for comparison with transformer models
+
+- **inference.py**: Script for using trained models to answer questions
+  - Enables easy use of the trained models for inference tasks
+
 - **FinalModels/**: Trained model checkpoints (available through GitHub Releases)
   - Optimized model weights for each architecture
 
@@ -231,4 +248,10 @@ My comprehensive evaluation demonstrates that transformer-based models achieve i
 
 The trade-offs between model size and performance are evident, with lighter models like DistilBERT offering reasonable performance with significantly reduced computational requirements. This suggests that for many practical applications, smaller models may provide an optimal balance of accuracy and efficiency.
 
-Future work could explore hybrid approaches and additional techniques to improve resilience against adversarial attacks. 
+Future work could explore more recent model architectures such as:
+
+- **DeBERTa** (Decoding-enhanced BERT with disentangled attention), which separates word content and position information, leading to better context understanding. Its enhanced mask decoder and disentangled attention mechanism could significantly improve performance on adversarial examples.
+
+- **ELECTRA** (Efficiently Learning an Encoder that Classifies Token Replacements Accurately), which uses a novel pre-training approach that learns from all input tokens rather than just masked ones. This more efficient training leads to better token representations and would likely improve both standard and adversarial question answering performance.
+
+Additional techniques to improve resilience against adversarial attacks could also be explored, such as adversarial training and data augmentation approaches. 
