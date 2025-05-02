@@ -217,6 +217,7 @@ datasets>=2.18
 evaluate>=0.4
 accelerate>=0.27
 tqdm
+scikit-learn>=1.0.2
 ```
 
 Install dependencies with:
