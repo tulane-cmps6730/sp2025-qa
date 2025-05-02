@@ -1,5 +1,7 @@
 # Question Answering with Transformer Models
 
+> **Note**: The complete code for this project is available in the [sp2025-qa-code repository](https://github.com/tulane-cmps6730/sp2025-qa-code).
+
 ## Project Overview
 This project explores the effectiveness of various transformer-based models for question answering on the SQuAD dataset. We fine-tuned multiple pre-trained models, evaluated their performance, and analyzed their behavior under standard and adversarial conditions.
 
@@ -10,7 +12,7 @@ This project explores the effectiveness of various transformer-based models for 
 - Identify optimal trade-offs between model size, computational requirements, and performance
 
 ## Methods
-- Fine-tuned four transformer models (BERT, DistilBERT, ALBERT, and RoBERTa)
+- Fine-tuned four state-of-the-art transformer models (BERT, DistilBERT, ALBERT, and RoBERTa)
 - Evaluated on standard benchmarks (SQuAD 1.1, SQuAD 2.0)
 - Tested with adversarial attacks (AddSent and AddOneSent)
 - Analyzed performance across different question types and answer contexts
@@ -40,6 +42,27 @@ Performance metrics across different evaluation settings (EM/F1 scores):
 ![BERT Training Progress - 84,000 steps with Adam optimizer](FurtherTrainingPlots/BERT_training_progress.png)
 ![ALBERT Training Progress - 37,500 steps with consistent improvements in loss metrics](FurtherTrainingPlots/albert_training_progress.png)
 ![DistilBERT Training Progress - 69,000 steps showing steady convergence](FurtherTrainingPlots/DistilbertTraining.png)
+
+## Benchmark Model Performance
+
+In addition to transformer models, we implemented a simple Bag of Words (BoW) benchmark to establish a baseline for comparison:
+
+### Bag of Words Benchmark
+
+The BoW benchmark uses a simple retrieval-based approach without deep learning:
+
+- Uses TF-IDF vectorization to represent questions and context text
+- Finds the most relevant sentence through cosine similarity
+- For longer sentences, uses a sliding window approach to extract the most relevant span
+- For SQuAD 2.0, implements a confidence-based threshold to determine if a question is answerable
+
+This simple approach produces the following baseline results:
+
+| Model | SQuAD 1.1 (EM/F1) | SQuAD 2.0 (EM/F1) | AddSent (EM/F1) | AddOneSent (EM/F1) |
+|-------|------------------|-------------------|----------------|-------------------|
+| BoW Benchmark | 0.25 / 19.00 | 0.93 / 10.74 | 0.08 / 16.59 | 0.17 / 17.57 |
+
+As expected, the simplistic nature of this approach results in significantly lower performance compared to transformer models, highlighting the effectiveness of deep learning approaches for complex QA tasks.
 
 ## Datasets Used
 
