@@ -1,42 +1,108 @@
-# CMPS 6730 Sample Project
+# Question Answering with Transformer Models
 
-This repository contains starter code for the final project in CMPS 4730/6730: Natural Language Processing at Tulane University.
+> **Note**: The complete code for this project is available in the [sp2025-qa-code repository](https://github.com/tulane-cmps6730/sp2025-qa-code).
 
-The code in this repository will be copied into your team's project repository at the start of class to provide a starting point for your project.
+## Project Overview
+This project explores the effectiveness of various transformer-based models for question answering on the SQuAD dataset. We fine-tuned multiple pre-trained models, evaluated their performance, and analyzed their behavior under adversarial conditions.
 
-You should edit this file to include a summary of the goals, methods, and conclusions of your project.
+![BERT Training Progress](FurtherTrainingPlots/BERT_training_progress.png)
 
-The structure of the code supports the following:
+## Models Explored
+The project evaluated four different transformer architectures:
 
-- A simple web UI using Flask to support a demo of the project
-- A command-line interface to support running different stages of the project's pipeline
-- The ability to easily reproduce your work on another machine by using virtualenv and providing access to external data sources.
+- **BERT**: Bidirectional Encoder Representations from Transformers
+- **DistilBERT**: A distilled version of BERT with ~40% fewer parameters
+- **Albert**: A Lite BERT with significantly fewer parameters
+- **RoBERTa**: A robustly optimized BERT approach
 
-### Using this repository
+## Key Findings
+- BERT achieved the highest F1 score (~73.7%) after 84,000 training steps
+- Smaller models like DistilBERT and Albert offered competitive performance with reduced computational requirements
+- All models showed vulnerability to adversarial examples, particularly with question modification
+- Model performance varied across different question types and context lengths
 
-- At the start of the course, students will be divided into project teams. Each team will receive a copy of this starter code in a new repository. E.g.:
-https://github.com/tulane-cmps6730/project-alpha
-- Each team member will then clone their team repository to their personal computer to work on their project. E.g.: `git clone https://github.com/tulane-cmps6730/project-alpha`
-- See [GettingStarted.md](GettingStarted.md) for instructions on using the starter code.
+![Albert Training Progress](FurtherTrainingPlots/albert_training_progress.png)
 
+## Evaluation Methods
+We evaluated models using:
+- Exact Match and F1 metrics for answer accuracy
+- Performance across different question types
+- Resilience to adversarial examples
+- Inference speed and model size considerations
 
-### Contents
+![DistilBERT Training Progress](FurtherTrainingPlots/DistilbertTraining.png)
 
-- [docs](docs): template to create slides for project presentations
-- [nlp](nlp): Python project code
-- [notebooks](notebooks): Jupyter notebooks for project development and experimentation
-- [report](report): LaTeX report
-- [tests](tests): unit tests for project code
+## Model Downloads
 
-### Background Resources
+Due to GitHub file size limitations, the trained models are available through the GitHub Release section, split into two parts:
 
-The following will give you some technical background on the technologies used here:
+**[Download Models from Releases](https://github.com/tulane-cmps6730/sp2025-qa/releases)**
 
-1. Refresh your Python by completing this online tutorial: <https://www.learnpython.org/> (3 hours)
-2. Create a GitHub account at <https://github.com/>
-3. Setup git by following <https://help.github.com/en/articles/set-up-git> (30 minutes)
-4. Learn git by completing the [Introduction to GitHub](https://lab.github.com/githubtraining/introduction-to-github) tutorial, reading the [git handbook](https://guides.github.com/introduction/git-handbook/), then completing the [Managing merge conflicts](https://lab.github.com/githubtraining/managing-merge-conflicts) tutorial (1 hour).
-5. Install the Python data science stack from <https://www.anaconda.com/distribution/> . **We will use Python 3** (30 minutes)
-6. Complete the scikit-learn tutorial from <https://www.datacamp.com/community/tutorials/machine-learning-python> (2 hours)
-7. Understand how python packages work by going through the [Python Packaging User Guide](https://packaging.python.org/tutorials/) (you can skip the "Creating Documentation" section). (1 hour)
-8. Complete Part 1 of the [Flask tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world), which is the library we will use for making a web demo for your project.
+Part 1 (1.2GB):
+- BERT checkpoint (84000 steps)
+- Albert checkpoint (37500 steps)
+
+Part 2 (1.9GB):
+- RoBERTa checkpoint (33000 steps)
+- DistilBERT checkpoint (69000 steps)
+
+### Installation Instructions
+
+1. Download both zip files from the Releases page
+2. Extract them to your project directory:
+   ```bash
+   unzip FinalModels_Part1.zip
+   unzip FinalModels_Part2.zip
+   ```
+3. The files will automatically merge into the correct `FinalModels` directory structure
+
+## Usage
+
+To use the models for inference:
+
+```python
+from transformers import AutoModelForQuestionAnswering, AutoTokenizer
+
+# Replace MODEL_NAME with one of: "BERTcheckpoint-84000", "DistilBERTcheckpoint-69000", 
+# "Albertcheckpoint-37500", or "RoBERTacheckpoint-33000"
+model_path = f"FinalModels/{MODEL_NAME}/"
+
+# Load model and tokenizer
+model = AutoModelForQuestionAnswering.from_pretrained(model_path)
+tokenizer = AutoTokenizer.from_pretrained(model_path)
+
+# Example question and context
+question = "What is the capital of France?"
+context = "Paris is the capital and most populous city of France."
+
+# Tokenize input
+inputs = tokenizer(question, context, return_tensors="pt")
+
+# Get model prediction
+outputs = model(**inputs)
+answer_start = outputs.start_logits.argmax()
+answer_end = outputs.end_logits.argmax() + 1
+answer = tokenizer.decode(inputs["input_ids"][0][answer_start:answer_end])
+
+print(f"Answer: {answer}")
+```
+
+## Requirements
+
+```
+torch>=2.1          
+transformers>=4.39
+datasets>=2.18
+evaluate>=0.4
+accelerate>=0.27
+tqdm
+```
+
+Install dependencies with:
+```bash
+pip install -r requirements.txt
+```
+
+## Conclusion
+
+This project demonstrates the effectiveness of transformer-based models for question answering tasks. While BERT-based models achieve strong performance, smaller models like DistilBERT and Albert offer compelling alternatives when computational resources are limited. Future work could explore hybrid approaches and additional techniques to improve resilience against adversarial attacks. 
