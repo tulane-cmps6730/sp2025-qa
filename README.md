@@ -1,7 +1,9 @@
-# Fine-Tuning Transformer Models for Question Answering: BERT and its Variants
+# Question Answering with Transformer Models
+
+> **Note**: The complete code for this project is available in the [sp2025-qa-code repository](https://github.com/tulane-cmps6730/sp2025-qa-code).
 
 ## Project Overview
-This project explores the effectiveness of various transformer-based models for question answering on the SQuAD dataset. I fine-tuned multiple pre-trained models, evaluated their performance, and analyzed their behavior under standard and adversarial conditions.
+This project explores the effectiveness of various transformer-based models for question answering on the SQuAD dataset. We fine-tuned multiple pre-trained models, evaluated their performance, and analyzed their behavior under standard and adversarial conditions.
 
 ## Goals
 - Evaluate the performance of different transformer architectures on question answering tasks
@@ -18,10 +20,13 @@ This project explores the effectiveness of various transformer-based models for 
 ## Models Explored
 The project evaluated four different transformer architectures:
 
-- **BERT**: Bidirectional Encoder Representations from Transformers
-- **DistilBERT**: A distilled version of BERT with ~40% fewer parameters
-- **ALBERT**: A Lite BERT with significantly fewer parameters
-- **RoBERTa**: A robustly optimized BERT approach
+- **BERT**: Bidirectional Encoder Representations from Transformers, with 110M parameters (base version). BERT utilizes Next Sentence Prediction (NSP) during pre-training along with Masked Language Modeling. It uses separate parameters for each layer with no parameter sharing across layers. The model maintains the same dimension size for both embeddings and hidden layers (768 for base model).
+
+- **DistilBERT**: A distilled version of BERT with ~40% fewer parameters (66M), trained via knowledge distillation from BERT. DistilBERT eliminates NSP during pre-training and uses only 6 transformer layers instead of BERT's 12. It maintains BERT's hidden size dimensions while being 60% faster and retaining 97% of BERT's performance.
+
+- **ALBERT**: A Lite BERT with significantly fewer parameters (12M for base version) due to two key techniques: factorized embedding parameterization (separating embedding dimension E=128 from hidden layer dimension H=768) and cross-layer parameter sharing across all 12 encoder layers. ALBERT replaces NSP with Sentence Order Prediction (SOP), which focuses on coherence prediction rather than topic prediction.
+
+- **RoBERTa**: A robustly optimized BERT approach with the same architecture as BERT base (110M parameters) but with optimized training. RoBERTa removes NSP pre-training, uses dynamic masking, larger batch sizes, and is trained on significantly more data than BERT with a larger vocabulary (50K vs 30K).
 
 ## Model Performance
 
@@ -34,25 +39,56 @@ Performance metrics across different evaluation settings (EM/F1 scores):
 | RoBERTa | 71.16 / 82.93 | 75.67 / 81.58 | 50.90 / 59.74 | 59.15 / 69.31 |
 | BERT | 70.58 / 77.71 | 71.72 / 75.53 | 50.65 / 56.22 | 57.97 / 64.02 |
 
-![BERT Training Progress](FurtherTrainingPlots/BERT_training_progress.png)
-![Albert Training Progress](FurtherTrainingPlots/albert_training_progress.png)
-![DistilBERT Training Progress](FurtherTrainingPlots/DistilbertTraining.png)
+![BERT Training Progress - 84,000 steps with Adam optimizer](FurtherTrainingPlots/BERT_training_progress.png)
+![ALBERT Training Progress - 37,500 steps with consistent improvements in loss metrics](FurtherTrainingPlots/albert_training_progress.png)
+![DistilBERT Training Progress - 69,000 steps showing steady convergence](FurtherTrainingPlots/DistilbertTraining.png)
+
+## Datasets Used
+
+The project utilized several key datasets for training and evaluation:
+
+- **SQuAD 1.1**: Stanford Question Answering Dataset version 1.1 containing over 100,000 question-answer pairs on 500+ articles. Each question has a corresponding answer found as a text span within a Wikipedia passage.
+
+- **SQuAD 2.0**: An enhanced version of SQuAD 1.1 that includes over 50,000 unanswerable questions written adversarially by crowd workers to look similar to answerable ones. This requires models to determine both when questions are unanswerable and provide correct answers when possible.
+
+- **Adversarial SQuAD**: Contains two variants (AddSent and AddOneSent) that introduce challenging adversarial examples:
+  - **AddSent**: Adds a distracting sentence to the context that includes words from the question but contains a different answer.
+  - **AddOneSent**: Adds a single adversarial sentence that doesn't answer the question but contains distracting information.
+
+The training samples typically included ~130,000 training examples and ~12,000 validation examples after preprocessing with appropriate stride and tokenization.
 
 ## Evaluation Metrics
 
-I evaluated our models using two primary metrics:
+We evaluated our models using two primary metrics:
 
 - **Exact Match (EM)**: The percentage of predictions that exactly match any of the ground truth answers. This is a strict binary measure where a prediction is either correct or incorrect.
 
 - **F1 Score (F1)**: The harmonic mean of precision and recall, treating the prediction and ground truth answers as bags of tokens. This metric provides a more flexible measure that rewards partial matches, which is especially important for longer answers.
 
+The F1 formula is:
+
+F1 = 2 × (Precision × Recall) / (Precision + Recall)
+
+Where:
+- Precision = fraction of predicted words that are correct
+- Recall = fraction of correct words that are predicted
+
 Both metrics are reported as percentages, with higher values indicating better performance.
 
 ## Key Findings
-- ALBERT achieved the highest overall performance on SQuAD 1.1 (83.22% F1) and remained strong on SQuAD 2.0
-- RoBERTa demonstrated exceptional robustness on SQuAD 2.0 (81.58% F1)
-- All models showed vulnerability to adversarial examples, with performance dropping significantly on the AddSent challenge
-- ALBERT maintained the best performance under adversarial conditions, highlighting its superior generalization capabilities
+- ALBERT achieved the highest overall performance on SQuAD 1.1 (83.22% F1) and remained strong on SQuAD 2.0, despite having significantly fewer parameters than other models due to its parameter-efficient design.
+
+- RoBERTa demonstrated exceptional robustness on SQuAD 2.0 (81.58% F1), showing the effectiveness of its optimized training approach and removal of the NSP task.
+
+- All models showed vulnerability to adversarial examples, with performance dropping significantly on the AddSent challenge compared to standard SQuAD datasets.
+
+- ALBERT maintained the best performance under adversarial conditions, likely because its parameter sharing and SOP task during pre-training provide better cross-sentence coherence understanding, making it more resistant to adversarial distractors that violate semantic expectations.
+
+- The trade-off between model size and performance was evident, with lighter models like DistilBERT offering reasonable performance (70.08% F1 on SQuAD 2.0) with significantly reduced computational requirements.
+
+- Cross-architecture analysis revealed that simply having more parameters doesn't guarantee better performance, as demonstrated by ALBERT's superior results despite its smaller parameter count.
+
+- Pre-training objectives significantly impact downstream task performance, with models trained without NSP generally performing better on question answering tasks.
 
 ## Project Structure
 
