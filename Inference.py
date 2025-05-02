@@ -2,7 +2,7 @@ from transformers import AutoModelForQuestionAnswering, AutoTokenizer
 
 # Replace MODEL_NAME with one of: "BERTcheckpoint-84000", "DistilBERTcheckpoint-69000", 
 # "Albertcheckpoint-37500", or "RoBERTacheckpoint-33000"
-model_path = f"FinalModels/DistilBERTcheckpoint-69000/"
+model_path = f"FinalModels/{MODEL_NAME}/"
 
 # Load model and tokenizer
 model = AutoModelForQuestionAnswering.from_pretrained(model_path)
