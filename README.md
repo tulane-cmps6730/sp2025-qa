@@ -1,7 +1,5 @@
 # Question Answering with Transformer Models
 
-> **Note**: The complete code for this project is available in the [sp2025-qa-code repository](https://github.com/tulane-cmps6730/sp2025-qa-code).
-
 ## Project Overview
 This project explores the effectiveness of various transformer-based models for question answering on the SQuAD dataset. We fine-tuned multiple pre-trained models, evaluated their performance, and analyzed their behavior under standard and adversarial conditions.
 
@@ -12,7 +10,7 @@ This project explores the effectiveness of various transformer-based models for 
 - Identify optimal trade-offs between model size, computational requirements, and performance
 
 ## Methods
-- Fine-tuned four state-of-the-art transformer models (BERT, DistilBERT, ALBERT, and RoBERTa)
+- Fine-tuned four transformer models (BERT, DistilBERT, ALBERT, and RoBERTa)
 - Evaluated on standard benchmarks (SQuAD 1.1, SQuAD 2.0)
 - Tested with adversarial attacks (AddSent and AddOneSent)
 - Analyzed performance across different question types and answer contexts
