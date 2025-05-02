@@ -10,7 +10,7 @@ This project explores the effectiveness of various transformer-based models for 
 - Identify optimal trade-offs between model size, computational requirements, and performance
 
 ## Methods
-- Fine-tuned four state-of-the-art transformer models (BERT, DistilBERT, ALBERT, and RoBERTa)
+- Fine-tuned four transformer models (BERT, DistilBERT, ALBERT, and RoBERTa)
 - Evaluated on standard benchmarks (SQuAD 1.1, SQuAD 2.0)
 - Tested with adversarial attacks (AddSent and AddOneSent)
 - Analyzed performance across different question types and answer contexts
